@@ -5,12 +5,15 @@ from exception import *
 
 class Domino:
     def __init__(self, nbr_left, nbr_right):
-        if not isinstance(nbr_left, int) or not isinstance(nbr_left, int):
-            raise InvalidDominoTypeException(nbr_left, nbr_right)
-        if nbr_left < 0 or nbr_left > 6:
-            raise InvalidDominoValueException(nbr_left, 'left')
-        if nbr_right < 0 or nbr_right > 6:
-            raise InvalidDominoValueException(nbr_right, 'right')
+        # domino value should be of int type between 0 and 6
+        # if not, raise exception
+        type_left, type_right = type(nbr_left), type(nbr_right)
+        if (type_left is not int) or (type_right is not int):
+            raise InvalidDominoTypeException(type_left, type_right)
+
+        if (nbr_left < 0 or nbr_left > 6) or (nbr_right < 0 or nbr_right > 6):
+            raise InvalidDominoValueException(nbr_left, nbr_right)
+
         self._left, self._right = nbr_left, nbr_right
         self._point = self._left + self._right
 
@@ -62,15 +65,25 @@ class Domino:
                 return True
         return False
 
-
 """
-a = Domino(4, 5)
-print(a.__repr__())
-print(a.__str__())
-print(a.__eq__(Domino(5, 4)))
-b = a.__repr__()
-
-print(a.__ne__(Domino(6, 3)))
+try:
+    Domino('f', 'g')
+except InvalidDominoTypeException as e:
+    print(e.__str__())
+try:
+    Domino(0.5, 5)
+except InvalidDominoTypeException as e:
+    print(e.__str__())
+try:
+    Domino(7, -3)
+except InvalidDominoValueException as e:
+    print(e.__str__())
+try:
+    Domino(-1, 0)
+except InvalidDominoValueException as e:
+    print(e.__str__())
+try:
+    Domino(6, 11)
+except InvalidDominoValueException as e:
+    print(e.__str__())
 """
-
-#Domino(-5, 5)

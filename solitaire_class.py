@@ -4,6 +4,7 @@
 
 
 import random
+import collections
 from domino_class import Domino
 from multi_sum import two_sum, three_sum
 from exception import *
@@ -43,21 +44,49 @@ class Solitaire:
         nbr_in_deck = self.check_nbr_deck()
         nbr_in_hand = self.check_nbr_hand()
         nbr_to_draw = max(nbr_max - nbr_in_hand, 0)
-        print(f"number of dominoes to draw: {nbr_to_draw}.")
+        print(f"Number of dominoes to draw: {nbr_to_draw}.")
         while (nbr_to_draw > 0) and (nbr_in_deck > 0):
             # add one domino to hand
             self._hand.append(self._deck.pop())
             nbr_to_draw -= 1
             nbr_in_deck -= 1
 
-    @staticmethod
-    def request_input_string():
-        idx_str = input("Please input a string of number to select the dominoes to pull out: ")
-        try:
-            idx_to_delete = [int(i)-1 for i in idx_str]
-            return idx_to_delete
-        except ValueError:
-            print("Non numerical input!")
+    def request_input_string(self):
+        nbr_in_hand = self.check_nbr_hand()
+        while True:
+            try:
+                idx_str = input("Please input a string of number to select the dominoes to pull out: ")
+                idx_to_delete = [int(i)-1 for i in idx_str]
+
+                # check if there are duplicate numbers in idx_to_delete
+                duplicate_idx_list = [idx+1 for idx, count in collections.Counter(idx_to_delete).items() if count > 1]
+                if duplicate_idx_list:
+                    raise DuplicateIndexException(duplicate_idx_list)
+
+                # check whether there is any index out of range
+                invalid_idx_list = [idx+1 for idx in idx_to_delete if (idx<0 or idx>(nbr_in_hand-1))]
+                if invalid_idx_list:
+                    raise InvalidHandIndexException(invalid_idx_list)
+
+                return idx_to_delete
+
+            except ValueError:
+                print("Conversion fails! The input is not a string of integers.")
+            except DuplicateIndexException as e:
+                print(e.__str__())
+                delete_duplicate_choice = input("Do you want to delete duplicate index and continue [Y/N]?: ")
+                yes_list = {"Y", "y", "Yes", "YES", "yes"}
+                no_list = {"N", "n", "No", "NO", "no"}
+                if delete_duplicate_choice in yes_list:
+                    idx_to_delete = list(set(idx_to_delete))
+                    print(f"Duplicate index removed. Continue ...")
+                    return idx_to_delete
+                if delete_duplicate_choice in no_list:
+                    print("String of numbers abandoned.")
+            except InvalidHandIndexException as e:
+                print(e.__str__())
+
+
 
     def pull_out_domino(self, idx_to_delete):
         """ pull out dominoes from hand
@@ -74,7 +103,7 @@ class Solitaire:
             print("Valid input. Dominoes chosen pulled out!")
             self._hand = [self._hand[i] for i in range(self.check_nbr_hand()) if i not in idx_to_delete]
         else:
-            print("Invalid input. Please retry!")
+            print("The sum of points is not 12. Please retry!")
 
     @staticmethod
     def check_points(dominoes):
@@ -137,7 +166,7 @@ class Solitaire:
         print("Draw dominoes from the deck to hand.")
         self.draw_domino()
 
-        print(f"number of dominoes in deck: {self.check_nbr_deck()}; " +
+        print(f"Number of dominoes in deck: {self.check_nbr_deck()}; " +
               f"number of dominoes in hand: {self.check_nbr_hand()}.")
 
         # show dominoes in hand
