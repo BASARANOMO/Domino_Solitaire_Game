@@ -1,14 +1,16 @@
 """
 @Author: ZHANG Mofan
-@Time: 10/05/2020 13:45-15:00
-
-@Author2: XIE Ruiling
-@Time: 10/05/2020 13:45-15:00
 """
-
+from exception import *
 
 class Domino:
     def __init__(self, nbr_left, nbr_right):
+        if not isinstance(nbr_left, int) or not isinstance(nbr_left, int):
+            raise InvalidDominoTypeException(nbr_left, nbr_right)
+        if nbr_left < 0 or nbr_left > 6:
+            raise InvalidDominoValueException(nbr_left, 'left')
+        if nbr_right < 0 or nbr_right > 6:
+            raise InvalidDominoValueException(nbr_right, 'right')
         self._left, self._right = nbr_left, nbr_right
         self._point = self._left + self._right
 
@@ -70,3 +72,5 @@ b = a.__repr__()
 
 print(a.__ne__(Domino(6, 3)))
 """
+
+#Domino(-5, 5)

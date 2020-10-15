@@ -1,15 +1,12 @@
 """
 @Author: ZHANG Mofan
-@Time: 10/05/2020 19:30-20:30
-
-@Author2: XIE Ruiling
-@Time: 10/05/2020 20:30-21:30
 """
 
 
 import random
 from domino_class import Domino
 from multi_sum import two_sum, three_sum
+from exception import *
 
 
 class Solitaire:
@@ -56,20 +53,23 @@ class Solitaire:
     @staticmethod
     def request_input_string():
         idx_str = input("Please input a string of number to select the dominoes to pull out: ")
-        return idx_str
+        try:
+            idx_to_delete = [int(i)-1 for i in idx_str]
+            return idx_to_delete
+        except ValueError:
+            print("Non numerical input!")
 
-    def pull_out_domino(self, idx_str):
+    def pull_out_domino(self, idx_to_delete):
         """ pull out dominoes from hand
 
         Parameters
         ----------
-        idx_str
+        idx_to_delete
 
         Returns
         -------
 
         """
-        idx_to_delete = [int(i)-1 for i in idx_str]
         if self.check_points(map(self._hand.__getitem__, idx_to_delete)):
             print("Valid input. Dominoes chosen pulled out!")
             self._hand = [self._hand[i] for i in range(self.check_nbr_hand()) if i not in idx_to_delete]
@@ -150,10 +150,10 @@ class Solitaire:
             return -1
 
         # request player to select the dominoes to pull out
-        idx_str = self.request_input_string()
+        idx_to_delete = self.request_input_string()
 
         # pull out selected dominoes
-        self.pull_out_domino(idx_str)
+        self.pull_out_domino(idx_to_delete)
 
         # check whether the player won
         if self.is_game_won():
