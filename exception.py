@@ -68,5 +68,4 @@ class PointsNotTwelveException(Exception):
     def __init__(self):
         super().__init__()
     def __str__(self):
-        return
-    
+        return f"Total points different from 12."

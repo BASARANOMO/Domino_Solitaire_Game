@@ -58,10 +58,22 @@ class Solitaire:
                 idx_str = input("Please input a string of number to select the dominoes to pull out: ")
                 idx_to_delete = [int(i)-1 for i in idx_str]
 
-                # check if there are duplicate numbers in idx_to_delete
-                duplicate_idx_list = [idx+1 for idx, count in collections.Counter(idx_to_delete).items() if count > 1]
-                if duplicate_idx_list:
-                    raise DuplicateIndexException(duplicate_idx_list)
+                try:
+                    # check if there are duplicate numbers in idx_to_delete
+                    duplicate_idx_list = [idx+1 for idx, count in collections.Counter(idx_to_delete).items() if count > 1]
+                    if duplicate_idx_list:
+                        raise DuplicateIndexException(duplicate_idx_list)
+                except DuplicateIndexException as e:
+                    print(e.__str__())
+                    delete_duplicate_choice = input("Do you want to delete duplicate index and continue [Y/N]?: ")
+                    yes_list = {"Y", "y", "Yes", "YES", "yes"}
+                    no_list = {"N", "n", "No", "NO", "no"}
+                    if delete_duplicate_choice in yes_list:
+                        idx_to_delete = list(set(idx_to_delete))
+                        print(f"Duplicate index removed. Index of dominoes to pull out: {[idx+1 for idx in idx_to_delete]}. Continue ...")
+                    if delete_duplicate_choice in no_list:
+                        print("String of numbers abandoned.")
+                        continue
 
                 # check whether there is any index out of range
                 invalid_idx_list = [idx+1 for idx in idx_to_delete if (idx<0 or idx>(nbr_in_hand-1))]
@@ -72,17 +84,6 @@ class Solitaire:
 
             except ValueError:
                 print("Conversion fails! The input is not a string of integers.")
-            except DuplicateIndexException as e:
-                print(e.__str__())
-                delete_duplicate_choice = input("Do you want to delete duplicate index and continue [Y/N]?: ")
-                yes_list = {"Y", "y", "Yes", "YES", "yes"}
-                no_list = {"N", "n", "No", "NO", "no"}
-                if delete_duplicate_choice in yes_list:
-                    idx_to_delete = list(set(idx_to_delete))
-                    print(f"Duplicate index removed. Continue ...")
-                    return idx_to_delete
-                if delete_duplicate_choice in no_list:
-                    print("String of numbers abandoned.")
             except InvalidHandIndexException as e:
                 print(e.__str__())
 
@@ -103,7 +104,7 @@ class Solitaire:
             print("Valid input. Dominoes chosen pulled out!")
             self._hand = [self._hand[i] for i in range(self.check_nbr_hand()) if i not in idx_to_delete]
         else:
-            print("The sum of points is not 12. Please retry!")
+            raise PointsNotTwelveException
 
     @staticmethod
     def check_points(dominoes):
@@ -178,11 +179,17 @@ class Solitaire:
             print("No more legal move. Defeat!")
             return -1
 
-        # request player to select the dominoes to pull out
-        idx_to_delete = self.request_input_string()
+        while True:
+            try:
+                # request player to select the dominoes to pull out
+                idx_to_delete = self.request_input_string()
 
-        # pull out selected dominoes
-        self.pull_out_domino(idx_to_delete)
+                # pull out selected dominoes
+                self.pull_out_domino(idx_to_delete)
+
+                break
+            except PointsNotTwelveException as e:
+                print(e.__str__()+" Please retry!")
 
         # check whether the player won
         if self.is_game_won():
