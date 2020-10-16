@@ -42,7 +42,7 @@ class InvalidHandIndexException(Exception):
             return f"The index {self.get_idx_list()[0]} is out of range!"
         else:
             invalid_idx_str = ", ".join([str(elem) for elem in self.get_idx_list()])
-            return f"The index {invalid_idx_str} are out of range!"
+            return f"The indices {invalid_idx_str} are out of range!"
     def get_idx_list(self):
         return self._invalid_idx_list
     def get_len(self):
@@ -58,7 +58,7 @@ class DuplicateIndexException(Exception):
             return f"The index {self.get_idx_list()[0]} is duplicated!"
         else:
             duplicate_idx_str = ", ".join([str(elem) for elem in self.get_idx_list()])
-            return f"The index {duplicate_idx_str} are duplicated!"
+            return f"The indices {duplicate_idx_str} are duplicated!"
     def get_idx_list(self):
         return self._duplicate_idx_list
     def get_len(self):

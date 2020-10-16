@@ -3,6 +3,7 @@
 @Time: 09/29/2020 22:00-23:00
 """
 
+import numpy as np
 
 def two_sum(nums, target):
     """ return indices of the two numbers such that they add up to target
@@ -38,23 +39,19 @@ def three_sum(nums, target):
     -------
 
     """
-
+    sort_idx_list = np.argsort(nums)
     nums.sort()
     len1 = len(nums)
-    res = []
     if len1 <= 2:
-        print(res)
+        return []
     for i in range(len1 - 1):
         left, right = i + 1, len1 - 1  # inspired by quick sort
         while left < right:
             temp = nums[i] + nums[left] + nums[right]
-            if temp == target and [nums[i], nums[left], nums[right]] not in res:
-                res.append([nums[i], nums[left], nums[right]])
-                left += 1
-                right -= 1
+            if temp == target:
+                return [sort_idx_list[i], sort_idx_list[left], sort_idx_list[right]]
             elif temp < target:
                 left += 1
             else:
                 right -= 1
-
-    return res
+    return []
