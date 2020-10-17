@@ -5,6 +5,7 @@
 
 import numpy as np
 
+
 def two_sum(nums, target):
     """ return indices of the two numbers such that they add up to target
 

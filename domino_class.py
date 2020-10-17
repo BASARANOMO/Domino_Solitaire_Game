@@ -3,6 +3,7 @@
 """
 from exception import *
 
+
 class Domino:
     def __init__(self, nbr_left, nbr_right):
         # domino value should be of int type between 0 and 6
@@ -29,11 +30,11 @@ class Domino:
 
         num_str_list = []
         for num in int_couple:
-            if (num & 1) == 0: # even number
+            if (num & 1) == 0:  # even number
                 num_str = [str_list[num], ' '*5, str_list[num+1]]
-            else: # odd number
+            else:  # odd number
                 num_str = [str_list[num-1], '  *  ', str_list[num]]
-            num_str_list.append(num_str) # num_str is element of num_str_list
+            num_str_list.append(num_str)  # num_str is element of num_str_list
 
         # add elements in num_str_list to domino_str
         for i in range(3):
@@ -64,6 +65,7 @@ class Domino:
             if self._left != other.read_left() and self._left != other.read_right():
                 return True
         return False
+
 
 """
 try:
