@@ -74,7 +74,7 @@ class Solitaire:
         # check whether sum of dots is equal to 12
         total_points = 0
         for domino in dominoes:
-            total_points += domino.read_point()
+            total_points += domino.point
         if total_points == 12:
             return True
         else:
@@ -102,7 +102,7 @@ class Solitaire:
 
     def is_game_lost(self):
         # 2 sum, 3 sum, 4 sum (3 sum), 5 sum (2 sum), 6 sum (check 1 domino)
-        points_list = [domino.read_point() for domino in self._hand]
+        points_list = [domino.point for domino in self._hand]
         total_points = sum(points_list)
 
         # first of all, check if the domino of 12 points is in hand
@@ -253,7 +253,7 @@ class AutoPlaySolitaire(Solitaire):
         super().__init__()
 
     def find_solution_each_turn(self):
-        points_list = [domino.read_point() for domino in self._hand]
+        points_list = [domino.point for domino in self._hand]
         res_idx = []
 
         # if domino whose point is 12 in hand, add it to solution
